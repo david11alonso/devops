@@ -47,11 +47,11 @@ Here’s an example structure for the `inventory` file:
 
 ```ini
 [masters]
-master ansible_host=<MASTER_IP> ansible_user=<USER> ansible_ssh_pass=<PASSWORD>
+master ansible_host=<MASTER_IP> ansible_user=<USER> ansible_password=<PASSWORD>
 
 [workers]
-worker1 ansible_host=<WORKER1_IP> ansible_user=<USER> ansible_ssh_pass=<PASSWORD>
-worker2 ansible_host=<WORKER2_IP> ansible_user=<USER> ansible_ssh_pass=<PASSWORD>
+worker1 ansible_host=<WORKER1_IP> ansible_user=<USER> ansible_password=<PASSWORD>
+worker2 ansible_host=<WORKER2_IP> ansible_user=<USER> ansible_password=<PASSWORD>
 ```
 
 Replace `<MASTER_IP>`, `<WORKER1_IP>`, `<WORKER2_IP>`, `<USER>`, and `<PASSWORD>` with the actual values for your setup.
