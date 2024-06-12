@@ -1,4 +1,4 @@
-To create a comprehensive README file for your Ansible project on GitHub, you can follow this structured format. This file will guide users through the installation and configuration process. Here’s how you can structure it:
+This file will guide users through the installation and configuration process. Here’s how you can structure it:
 
 ---
 
