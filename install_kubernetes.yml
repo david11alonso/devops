@@ -1,0 +1,76 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  become_user: root
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install prerequisites for adding GPG key
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - curl
+        - gnupg
+
+    - name: Create directory for Kubernetes GPG key if not exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Check if Kubernetes GPG key already exists
+      stat:
+        path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      register: kubernetes_gpg_key
+
+    - name: Download and add Kubernetes GPG key if not exists
+      shell: |
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      when: not kubernetes_gpg_key.stat.exists
+
+    - name: Add Kubernetes APT repository
+      shell: |
+        echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
+
+    - name: Update apt package index after adding Kubernetes repository
+      apt:
+        update_cache: yes
+
+    - name: Disable swap
+      command: swapoff -a
+      ignore_errors: true
+
+    - name: Ensure swap is disabled on reboot by commenting out swap entries in /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        regexp: '^\s*([^#\s]+)\s+none\s+swap\s+'
+        line: '#\1 none swap'
+        state: present
+        backrefs: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Enable and start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Install Kubernetes components
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+        - kubernetes-cni

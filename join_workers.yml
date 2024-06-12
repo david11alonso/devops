@@ -1,0 +1,30 @@
+---
+- hosts: workers
+  become: true
+  tasks:
+    - name: Ensure the join command file exists on the control node
+      stat:
+        path: /tmp/kubeadm_join_command.txt
+      delegate_to: localhost
+      register: join_command_file
+
+    - name: Fail if join command file does not exist on the control node
+      fail:
+        msg: "The kubeadm join command file /tmp/kubeadm_join_command.txt does not exist on the control node."
+      when: not join_command_file.stat.exists
+
+    - name: Copy join command file to worker nodes
+      copy:
+        src: /tmp/kubeadm_join_command.txt
+        dest: /tmp/kubeadm_join_command.txt
+      when: join_command_file.stat.exists
+
+    - name: Join worker nodes to the cluster
+      shell: "{{ lookup('file', '/tmp/kubeadm_join_command.txt') }}"
+      when: join_command_file.stat.exists
+
+    - name: Clean up join command file on worker node
+      file:
+        path: /tmp/kubeadm_join_command.txt
+        state: absent
+      when: join_command_file.stat.exists
