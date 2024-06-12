@@ -1,5 +1,3 @@
-This file will guide users through the installation and configuration process. Here’s how you can structure it:
-
 ---
 
 # Kubernetes Installation with Ansible
