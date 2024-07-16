@@ -72,7 +72,7 @@ Add the cluster details(it is not required to add a public domain but you might 
 
 For further details on Ansible and Kubernetes, refer to their official documentation:
 
-- [Openshift documentation][(https://docs.ansible.com/)](https://docs.openshift.com/container-platform/4.10/installing/index.html)
+- [Openshift documentation][[(https://docs.ansible.com/](https://docs.openshift.com/container-platform/4.10/installing/index.html))]
 
 ## Troubleshooting
 
