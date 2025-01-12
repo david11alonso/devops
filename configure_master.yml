@@ -3,7 +3,7 @@
   become: true
   tasks:
     - name: Initialize Kubernetes cluster
-      shell: kubeadm init --pod-network-cidr=192.168.0.0/16
+      shell: kubeadm init --pod-network-cidr=10.69.69.0/16
       ignore_errors: true
 
     - name: Set up kubeconfig for root user
